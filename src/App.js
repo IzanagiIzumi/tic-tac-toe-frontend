@@ -57,9 +57,27 @@ function App() {
     }
   };
 
+  async function sendTrainingResult(winner, finalBoard) {
+    try {
+      await fetch(`${API_URL}/train`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ result: winner, final_state: finalBoard }),
+      });
+    } catch (err) {
+      console.error("Training API error:", err);
+    }
+  }
+
   const endGame = (winner) => {
     setIsGameOver(true);
-    setMessage(winner === 1 ? "🎉 You win!" : winner === 2 ? "💻 AI wins!" : "😐 It's a draw!");
+    setMessage(
+      winner === 1 ? "🎉 You win!" :
+      winner === 2 ? "💻 AI wins!" :
+      "😐 It's a draw!"
+    );
+
+    sendTrainingResult(winner, board);
   };
 
   const resetGame = () => {
