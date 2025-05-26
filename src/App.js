@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import "./App.css";
 
-// ✅ Replace this with your actual Render backend URL
-const API_URL = "https://tic-tac-toe-ai-ursp.onrender.com/move";
-
-const initialState = Array(9).fill(0); // 0 = empty, 1 = player, 2 = AI
+const API_URL = "https://tic-tac-toe-ai-ursp.onrender.com";
+const initialState = Array(9).fill(0);
 
 function App() {
   const [board, setBoard] = useState(initialState);
@@ -33,47 +31,35 @@ function App() {
     setBoard(newBoard);
 
     const winner = checkWinner(newBoard);
-    if (winner) {
-      endGame(winner);
-      return;
-    }
+    if (winner) return endGame(winner);
 
     setMessage("AI is thinking...");
-
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${API_URL}/move`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ state: newBoard }),
       });
-
-      if (!response.ok) throw new Error("API error");
-
       const data = await response.json();
       const aiMove = data.move;
 
       if (newBoard[aiMove] === 0) {
         newBoard[aiMove] = 2;
         setBoard([...newBoard]);
+
         const winner = checkWinner(newBoard);
-        if (winner) endGame(winner);
-        else setMessage("Your move!");
+        winner ? endGame(winner) : setMessage("Your move!");
       } else {
         setMessage("AI returned an invalid move!");
       }
     } catch (error) {
-      console.error("Error contacting AI:", error);
       setMessage("Error contacting AI.");
     }
   };
 
   const endGame = (winner) => {
     setIsGameOver(true);
-    setMessage(
-      winner === 1 ? "🎉 You win!" :
-      winner === 2 ? "💻 AI wins!" :
-      "😐 It's a draw!"
-    );
+    setMessage(winner === 1 ? "🎉 You win!" : winner === 2 ? "💻 AI wins!" : "😐 It's a draw!");
   };
 
   const resetGame = () => {
@@ -82,22 +68,24 @@ function App() {
     setIsGameOver(false);
   };
 
-  return (
-    <div className="App">
-      <h1>Tic Tac Toe (AI)</h1>
-      <p>{message}</p>
-      <div className="board">
-        {board.map((_, i) => (
-          <button
-            key={i}
-            className="cell"
-            onClick={() => handleClick(i)}
-            disabled={isGameOver}
-          >
-            {board[i] === 1 ? "X" : board[i] === 2 ? "O" : ""}
-          </button>
-        ))}
+  const renderCell = (index) => {
+    const value = board[index];
+    return (
+      <div
+        key={index}
+        onClick={() => handleClick(index)}
+        className={`cell ${value === 1 ? "player" : value === 2 ? "ai" : ""}`}
+      >
+        {value === 1 ? "X" : value === 2 ? "O" : ""}
       </div>
+    );
+  };
+
+  return (
+    <div className="app">
+      <h1 className="title">Tic Tac Toe <span className="ai-tag">with AI</span></h1>
+      <div className="message">{message}</div>
+      <div className="board">{board.map((_, i) => renderCell(i))}</div>
       <button className="reset" onClick={resetGame}>Restart Game</button>
     </div>
   );

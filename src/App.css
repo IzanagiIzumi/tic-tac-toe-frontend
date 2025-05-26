@@ -1,29 +1,70 @@
-.App {
+.app {
+  font-family: 'Segoe UI', sans-serif;
   text-align: center;
-  font-family: sans-serif;
-  padding: 20px;
+  padding: 2rem;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.ai-tag {
+  color: #888;
+  font-size: 1rem;
+}
+
+.message {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #333;
 }
 
 .board {
   display: grid;
   grid-template-columns: repeat(3, 100px);
-  grid-gap: 10px;
+  gap: 10px;
   justify-content: center;
-  margin: 20px auto;
+  margin-bottom: 1rem;
 }
 
 .cell {
   width: 100px;
   height: 100px;
   font-size: 2rem;
+  background: white;
+  border: 2px solid #ddd;
   cursor: pointer;
-  background: #f0f0f0;
-  border: 2px solid #333;
-  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.cell.player {
+  color: #2d8cf0;
+}
+
+.cell.ai {
+  color: #f45b69;
+}
+
+.cell:hover {
+  background-color: #f0f0f0;
 }
 
 .reset {
-  margin-top: 20px;
-  padding: 10px 20px;
+  padding: 0.6rem 1.5rem;
   font-size: 1rem;
+  background-color: #2d8cf0;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.reset:hover {
+  background-color: #1b6edb;
 }
