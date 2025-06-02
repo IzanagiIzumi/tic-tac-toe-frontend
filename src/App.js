@@ -35,7 +35,7 @@ function App() {
 
     setMessage("AI is thinking...");
     try {
-      const response = await fetch(`${API_URL}/ai-move`, {  // <-- Updated endpoint here
+      const response = await fetch(`${API_URL}/move`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ state: newBoard }),
